@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Göktürk SMP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fontlar -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0b0703;
+      color: #f5f0e6;
+    }
+
+    header {
+      min-height: 100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      background:
+        linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.9)),
+        url('https://images.unsplash.com/photo-1501785888041-af3ef285b470') center/cover;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 4rem;
+      color: #d4af37;
+      letter-spacing: 4px;
+    }
+
+    header p {
+      margin-top: 15px;
+      opacity: .85;
+    }
+
+    .ip-box {
+      margin-top: 25px;
+      padding: 15px 30px;
+      border: 2px solid #d4af37;
+      border-radius: 12px;
+      background: rgba(0,0,0,.6);
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 14px 40px;
+      border:none;
+      border-radius:30px;
+      background:#d4af37;
+      color:#1a1208;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .stats {
+      margin-top:20px;
+      font-size:1.2rem;
+    }
+
+    .announcement {
+      margin-top:15px;
+      font-size:1.1rem;
+      color:#f1d98a;
+    }
+
+    section {
+      padding: 80px 10%;
+    }
+
+    .title {
+      text-align:center;
+      font-family:'Cinzel', serif;
+      font-size:2.4rem;
+      color:#d4af37;
+      margin-bottom:40px;
+    }
+
+    .cards {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(212,175,55,.3);
+      border-radius:18px;
+      padding:30px;
+      text-align:center;
+    }
+
+    footer {
+      text-align:center;
+      padding:25px;
+      background:#050302;
+      opacity:.8;
+    }
+
+    /* Bakım Modu */
+    #maintenance {
+      display:none;
+      position:fixed;
+      inset:0;
+      background:#050302;
+      z-index:9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    #maintenance h2 {
+      color:#d4af37;
+      font-family:'Cinzel', serif;
+      font-size:3rem;
+    }
+
+    /* Admin Panel */
+    #adminPanel {
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.9);
+      z-index:9998;
+      padding:40px;
+    }
+
+    .admin-box {
+      max-width:500px;
+      margin:auto;
+      background:#120c05;
+      padding:30px;
+      border-radius:20px;
+      border:1px solid #d4af37;
+    }
+
+    .admin-box h3 {
+      text-align:center;
+      color:#d4af37;
+      margin-bottom:20px;
+    }
+
+    .admin-box input,
+    .admin-box textarea {
+      width:100%;
+      margin-bottom:15px;
+      padding:10px;
+      border-radius:8px;
+      border:none;
+    }
+
+    .admin-box button {
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:20px;
+      background:#d4af37;
+      font-weight:700;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- BAKIM MODU -->
+<div id="maintenance">
+  <div>
+    <h2>BAKIM MODU</h2>
+    <p>Göktürk SMP şu anda bakımdadır.</p>
+  </div>
+</div>
+
+<header>
+  <h1>GÖKTÜRK SMP</h1>
+  <p>Bozkırın ruhu Minecraft dünyasında</p>
+
+  <div class="ip-box">
+    IP: <b>GokTurksmp.aternos.me</b>
+  </div>
+
+  <button class="btn" onclick="copyIP()">IP'yi Kopyala</button>
+
+  <div class="stats">
+    Aktif Oyuncu: <span id="playerCount">0</span>
+  </div>
+
+  <div class="announcement" id="announcement">
+    Hoş geldiniz!
+  </div>
+</header>
+
+<section>
+  <h2 class="title">Sunucu Özellikleri</h2>
+  <div class="cards">
+    <div class="card"><h3>⚔️ SMP</h3><p>Adil ve rekabetçi oyun.</p></div>
+    <div class="card"><h3>🏹 Klan Sistemi</h3><p>Boyunu kur, gücünü artır.</p></div>
+    <div class="card"><h3>🔥 Etkinlikler</h3><p>Turnuvalar ve özel ödüller.</p></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Göktürk SMP
+</footer>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <div class="admin-box">
+    <h3>Admin Paneli</h3>
+
+    <input type="number" id="adminPlayers" placeholder="Aktif oyuncu sayısı">
+    <textarea id="adminAnnouncement" placeholder="Duyuru yaz"></textarea>
+
+    <button onclick="saveAdmin()">Kaydet</button>
+    <button onclick="toggleMaintenance()" style="margin-top:10px;background:#8b0000;color:#fff;">
+      Bakım Modu Aç / Kapat
+    </button>
+    <button onclick="closeAdmin()" style="margin-top:10px;">
+      Paneli Kapat
+    </button>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "duman1234";
+
+  function copyIP() {
+    navigator.clipboard.writeText("GokTurksmp.aternos.me");
+    alert("IP kopyalandı!");
+  }
+
+  // Kayıtlı veriler
+  document.getElementById("playerCount").innerText =
+    localStorage.getItem("players") || 0;
+
+  document.getElementById("announcement").innerText =
+    localStorage.getItem("announcement") || "Hoş geldiniz!";
+
+  if (localStorage.getItem("maintenance") === "on") {
+    document.getElementById("maintenance").style.display = "flex";
+  }
+
+  // F10 ile admin panel
+  document.addEventListener("keydown", e => {
+    if (e.key === "F10") openAdmin();
+  });
+
+  function openAdmin() {
+    const pass = prompt("Admin şifresi:");
+    if (pass === PASSWORD) {
+      document.getElementById("adminPanel").style.display = "block";
+    } else {
+      alert("Hatalı şifre!");
+    }
+  }
+
+  function closeAdmin() {
+    document.getElementById("adminPanel").style.display = "none";
+  }
+
+  function saveAdmin() {
+    localStorage.setItem("players",
+      document.getElementById("adminPlayers").value);
+    localStorage.setItem("announcement",
+      document.getElementById("adminAnnouncement").value);
+    location.reload();
+  }
+
+  function toggleMaintenance() {
+    if (localStorage.getItem("maintenance") === "on") {
+      localStorage.removeItem("maintenance");
+    } else {
+      localStorage.setItem("maintenance", "on");
+    }
+    location.reload();
+  }
+</script>
+
+</body>
+</html>
