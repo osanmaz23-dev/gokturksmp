@@ -243,7 +243,7 @@
   document.getElementById("announcement").innerText =
     localStorage.getItem("announcement") || "Hoş geldiniz!";
 
-  if (localStorage.getItem("maintenance") === "on") {
+  if (localStorage.getItem("maintenance") === "off") {
     document.getElementById("maintenance").style.display = "flex";
   }
 
