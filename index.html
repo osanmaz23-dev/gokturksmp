@@ -36,10 +36,7 @@
       letter-spacing: 4px;
     }
 
-    header p {
-      margin-top: 15px;
-      opacity: .85;
-    }
+    header p { margin-top: 15px; opacity: .85; }
 
     .ip-box {
       margin-top: 25px;
@@ -62,8 +59,12 @@
 
     .stats {
       margin-top:20px;
-      font-size:1.2rem;
+      font-size:1.3rem;
+      font-weight:bold;
     }
+
+    .online { color:#2ecc71; }
+    .offline { color:#e74c3c; }
 
     .announcement {
       margin-top:15px;
@@ -71,9 +72,7 @@
       color:#f1d98a;
     }
 
-    section {
-      padding: 80px 10%;
-    }
+    section { padding: 80px 10%; }
 
     .title {
       text-align:center;
@@ -147,7 +146,6 @@
       margin-bottom:20px;
     }
 
-    .admin-box input,
     .admin-box textarea {
       width:100%;
       margin-bottom:15px;
@@ -188,8 +186,8 @@
 
   <button class="btn" onclick="copyIP()">IP'yi Kopyala</button>
 
-  <div class="stats">
-    Aktif Oyuncu: <span id="playerCount">0</span>
+  <div class="stats" id="serverStatus">
+    Sunucu durumu: kontrol ediliyor...
   </div>
 
   <div class="announcement" id="announcement">
@@ -215,7 +213,6 @@
   <div class="admin-box">
     <h3>Admin Paneli</h3>
 
-    <input type="number" id="adminPlayers" placeholder="Aktif oyuncu sayısı">
     <textarea id="adminAnnouncement" placeholder="Duyuru yaz"></textarea>
 
     <button onclick="saveAdmin()">Kaydet</button>
@@ -230,24 +227,44 @@
 
 <script>
   const PASSWORD = "duman1234";
+  const SERVER_IP = "GokTurksmp.aternos.me";
 
   function copyIP() {
-    navigator.clipboard.writeText("GokTurksmp.aternos.me");
+    navigator.clipboard.writeText(SERVER_IP);
     alert("IP kopyalandı!");
   }
 
-  // Kayıtlı veriler
-  document.getElementById("playerCount").innerText =
-    localStorage.getItem("players") || 0;
-
+  // duyuru
   document.getElementById("announcement").innerText =
     localStorage.getItem("announcement") || "Hoş geldiniz!";
 
-  if (localStorage.getItem("maintenance") === "off") {
-    document.getElementById("maintenance").style.display = "flex";
+  // bakım modu
+  const maintenanceDiv = document.getElementById("maintenance");
+  maintenanceDiv.style.display = "none";
+
+  if (localStorage.getItem("maintenance") === "on") {
+    maintenanceDiv.style.display = "flex";
   }
 
-  // F10 ile admin panel
+  // sunucu durumu
+  fetch("https://api.mcsrvstat.us/2/" + SERVER_IP)
+    .then(r => r.json())
+    .then(d => {
+      const s = document.getElementById("serverStatus");
+      if (d.online) {
+        s.innerHTML = "Sunucu durumu: 🟢 AÇIK";
+        s.className = "stats online";
+      } else {
+        s.innerHTML = "Sunucu durumu: 🔴 KAPALI";
+        s.className = "stats offline";
+      }
+    })
+    .catch(() => {
+      document.getElementById("serverStatus").innerText =
+        "Sunucu durumu: bilinmiyor";
+    });
+
+  // F10 admin
   document.addEventListener("keydown", e => {
     if (e.key === "F10") openAdmin();
   });
@@ -266,8 +283,6 @@
   }
 
   function saveAdmin() {
-    localStorage.setItem("players",
-      document.getElementById("adminPlayers").value);
     localStorage.setItem("announcement",
       document.getElementById("adminAnnouncement").value);
     location.reload();
@@ -285,3 +300,4 @@
 
 </body>
 </html>
+
