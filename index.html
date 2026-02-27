@@ -5,7 +5,6 @@
   <title>Göktürk SMP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fontlar -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
 
   <style>
@@ -24,6 +23,7 @@
       justify-content:center;
       align-items:center;
       text-align:center;
+      padding: 20px;
       background:
         linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.9)),
         url('https://images.unsplash.com/photo-1501785888041-af3ef285b470') center/cover;
@@ -38,38 +38,51 @@
 
     header p { margin-top: 15px; opacity: .85; }
 
-    .ip-box {
+    .ip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
       margin-top: 25px;
+    }
+
+    .ip-box {
       padding: 15px 30px;
       border: 2px solid #d4af37;
       border-radius: 12px;
       background: rgba(0,0,0,.6);
+      min-width: 250px;
     }
 
     .btn {
-      margin-top: 25px;
-      padding: 14px 40px;
+      margin-top: 15px;
+      padding: 10px 25px;
       border:none;
       border-radius:30px;
       background:#d4af37;
       color:#1a1208;
       font-weight:700;
       cursor:pointer;
+      font-size: 0.9rem;
     }
 
     .stats {
-      margin-top:20px;
-      font-size:1.3rem;
+      margin-top:15px;
+      font-size:1.1rem;
       font-weight:bold;
+      line-height: 1.6;
     }
 
     .online { color:#2ecc71; }
     .offline { color:#e74c3c; }
 
     .announcement {
-      margin-top:15px;
+      margin-top:30px;
       font-size:1.1rem;
       color:#f1d98a;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 10px 20px;
+      border-radius: 8px;
     }
 
     section { padding: 80px 10%; }
@@ -103,13 +116,13 @@
       opacity:.8;
     }
 
-    /* Bakım Modu */
+    /* Bakım Modu Düzenlendi */
     #maintenance {
       display:none;
       position:fixed;
       inset:0;
       background:#050302;
-      z-index:9999;
+      z-index:9000; /* Admin panelden daha düşük olmalı */
       align-items:center;
       justify-content:center;
       text-align:center;
@@ -121,14 +134,15 @@
       font-size:3rem;
     }
 
-    /* Admin Panel */
+    /* Admin Panel z-index artırıldı */
     #adminPanel {
       display:none;
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,.9);
-      z-index:9998;
+      background:rgba(0,0,0,.95);
+      z-index:9999; /* En üstte olmalı */
       padding:40px;
+      overflow-y: auto;
     }
 
     .admin-box {
@@ -152,6 +166,7 @@
       padding:10px;
       border-radius:8px;
       border:none;
+      height: 100px;
     }
 
     .admin-box button {
@@ -168,11 +183,11 @@
 
 <body>
 
-<!-- BAKIM MODU -->
 <div id="maintenance">
   <div>
     <h2>BAKIM MODU</h2>
     <p>Göktürk SMP şu anda bakımdadır.</p>
+    <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.5;">(Yetkili girişi için F10 tuşuna basınız)</p>
   </div>
 </div>
 
@@ -180,19 +195,21 @@
   <h1>GÖKTÜRK SMP</h1>
   <p>Bozkırın ruhu Minecraft dünyasında</p>
 
-  <div class="ip-box">
-    IP: <b>GokTurksmp.aternos.me</b>
+  <div class="ip-container">
+    <div class="ip-box">
+      IP: <b>GokTurksmp.aternos.me</b><br>
+      <button class="btn" onclick="copyIP('GokTurksmp.aternos.me')">Kopyala</button>
+      <div class="stats" id="status1">Kontrol ediliyor...</div>
+    </div>
+
+    <div class="ip-box">
+      IP: <b>GOKTURK.aternos.me</b><br>
+      <button class="btn" onclick="copyIP('GOKTURK.aternos.me')">Kopyala</button>
+      <div class="stats" id="status2">Kontrol ediliyor...</div>
+    </div>
   </div>
 
-  <button class="btn" onclick="copyIP()">IP'yi Kopyala</button>
-
-  <div class="stats" id="serverStatus">
-    Sunucu durumu: kontrol ediliyor...
-  </div>
-
-  <div class="announcement" id="announcement">
-    Hoş geldiniz!
-  </div>
+  <div class="announcement" id="announcement">Hoş geldiniz!</div>
 </header>
 
 <section>
@@ -204,76 +221,66 @@
   </div>
 </section>
 
-<footer>
-  © 2026 Göktürk SMP
-</footer>
+<footer>© 2026 Göktürk SMP</footer>
 
-<!-- ADMIN PANEL -->
 <div id="adminPanel">
   <div class="admin-box">
     <h3>Admin Paneli</h3>
-
     <textarea id="adminAnnouncement" placeholder="Duyuru yaz"></textarea>
-
-    <button onclick="saveAdmin()">Kaydet</button>
-    <button onclick="toggleMaintenance()" style="margin-top:10px;background:#8b0000;color:#fff;">
-      Bakım Modu Aç / Kapat
+    <button onclick="saveAdmin()">Duyuruyu Kaydet</button>
+    <button id="mBtn" onclick="toggleMaintenance()" style="margin-top:10px;background:#8b0000;color:#fff;">
+      Bakım Modu: KAPALI
     </button>
-    <button onclick="closeAdmin()" style="margin-top:10px;">
-      Paneli Kapat
-    </button>
+    <button onclick="closeAdmin()" style="margin-top:10px;">Paneli Kapat</button>
   </div>
 </div>
 
 <script>
   const PASSWORD = "duman1234";
-  const SERVER_IP = "GokTurksmp.aternos.me";
 
-  function copyIP() {
-    navigator.clipboard.writeText(SERVER_IP);
-    alert("IP kopyalandı!");
+  function copyIP(ip) {
+    navigator.clipboard.writeText(ip);
+    alert("IP kopyalandı: " + ip);
   }
 
-  // duyuru
-  document.getElementById("announcement").innerText =
-    localStorage.getItem("announcement") || "Hoş geldiniz!";
+  // Sayfa yüklendiğinde ayarları kontrol et
+  window.onload = function() {
+    document.getElementById("announcement").innerText = localStorage.getItem("announcement") || "Hoş geldiniz!";
+    
+    const mActive = localStorage.getItem("maintenance") === "on";
+    document.getElementById("maintenance").style.display = mActive ? "flex" : "none";
+    document.getElementById("mBtn").innerText = mActive ? "Bakım Modu: AÇIK (Kapatmak için tıkla)" : "Bakım Modu: KAPALI (Açmak için tıkla)";
+    
+    checkStatus("GokTurksmp.aternos.me", "status1");
+    checkStatus("GOKTURK.aternos.me", "status2");
+  };
 
-  // bakım modu
-  const maintenanceDiv = document.getElementById("maintenance");
-  maintenanceDiv.style.display = "none";
-
-  if (localStorage.getItem("maintenance") === "off") {
-    maintenanceDiv.style.display = "flex";
+  function checkStatus(ip, elementId) {
+    fetch("https://api.mcsrvstat.us/2/" + ip)
+      .then(r => r.json())
+      .then(d => {
+        const s = document.getElementById(elementId);
+        if (d.online) {
+          s.innerHTML = `Durum: <span class="online">🟢 AÇIK</span><br>Aktif: ${d.players.online}/${d.players.max}`;
+        } else {
+          s.innerHTML = `Durum: <span class="offline">🔴 KAPALI</span>`;
+        }
+      });
   }
 
-  // sunucu durumu
-  fetch("https://api.mcsrvstat.us/2/" + SERVER_IP)
-    .then(r => r.json())
-    .then(d => {
-      const s = document.getElementById("serverStatus");
-      if (d.online) {
-        s.innerHTML = "Sunucu durumu: 🟢 AÇIK";
-        s.className = "stats online";
-      } else {
-        s.innerHTML = "Sunucu durumu: 🔴 KAPALI";
-        s.className = "stats offline";
-      }
-    })
-    .catch(() => {
-      document.getElementById("serverStatus").innerText =
-        "Sunucu durumu: bilinmiyor";
-    });
-
-  // F10 admin
+  // F10 Dinleyici - Her zaman çalışır
   document.addEventListener("keydown", e => {
-    if (e.key === "F10") openAdmin();
+    if (e.key === "F10") {
+      e.preventDefault();
+      openAdmin();
+    }
   });
 
   function openAdmin() {
     const pass = prompt("Admin şifresi:");
     if (pass === PASSWORD) {
       document.getElementById("adminPanel").style.display = "block";
-    } else {
+    } else if (pass !== null) {
       alert("Hatalı şifre!");
     }
   }
@@ -283,8 +290,7 @@
   }
 
   function saveAdmin() {
-    localStorage.setItem("announcement",
-      document.getElementById("adminAnnouncement").value);
+    localStorage.setItem("announcement", document.getElementById("adminAnnouncement").value);
     location.reload();
   }
 
@@ -300,4 +306,3 @@
 
 </body>
 </html>
-
